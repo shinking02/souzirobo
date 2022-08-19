@@ -18,7 +18,6 @@
     int modeNumber;
     String modeName[] = {"manual", "auto", "semi-auto"};
     int rx, lx;
-    int voltage;
 
     void setup() {
         pinMode(RX_PIN, INPUT);
@@ -31,6 +30,7 @@
         radio.openWritingPipe(address[1]);
         radio.openReadingPipe(1, address[0]);
         radio.setPALevel(RF24_PA_MIN);
+        radio.setAutoAck(true);
         display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
         display.display();
         delay(1000);
@@ -52,16 +52,31 @@
                 delay(200);
             }
         }
+        display.clearDisplay();
+        display.setCursor(0, 0);
+        display.print("connected!");
+        display.display();
+        delay(2000);
         radio.setAutoAck(false);
     }
 
-    void dispHome() {
-        for(int i = 0; i < 100; i++) {
-            display.println(i);
-            display.display();
-            delay(1000);
-        }
+    void loop() {
+        rx = analogRead(RX_PIN);
+        lx = analogRead(LX_PIN);
+        checkMode();
+        sendData();
+        dispHome();
+    }
 
+    void dispHome() {
+        display.clearDisplay();
+        display.setCursor(0, 0);
+        display.print("mode: ");
+        display.println(modeName[modeNumber]);
+        display.setCursor(0, 8);
+        display.print("voltage: ");
+        display.println(getVoltage());
+        display.display();
     }
 
     void checkMode() {
@@ -84,16 +99,8 @@
         radio.write(lx, sizeof(lx));
     }
 
-    void recvData() {
-        radio.startListening();
-        radio.read(voltage, sizeof(voltage));
+    int getVoltage() {
+        return 0;
     }
 
-    void loop() {
-        rx = analogRead(RX_PIN);
-        lx = analogRead(LX_PIN);
-        checkMode();
-        recvData();
-        sendData();
-        dispHome();
-    }
+
