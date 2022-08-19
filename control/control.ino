@@ -83,10 +83,11 @@
         sw0 = digitalRead(SW0_PIN);
         if(sw0 == LOW && modeNumber == 2) {
             modeNumber = 0;
+            EEPROM.write(0x000, modeNumber);
         }else if(sw0 == LOW) {
             modeNumber ++;
+            EEPROM.write(0x000, modeNumber);
         }
-        EEPROM.write(0x000, modeNumber);
     }
 
 
