@@ -12,12 +12,13 @@
 
     const int RX_PIN = A1;
     const int LX_PIN = A2;
-    const int SW0_PIN = 5; //モードセレクト
-    const int SW1_PIN = 6;
-    const int SW2_PIN = 7;
+    const int SW0_PIN = 2; //モードセレクト
+    const int SW1_PIN = 3;
+    const int SW2_PIN = 4;
     int modeNumber;
     String modeName[] = {"manual", "auto", "semi-auto"};
     int rx, lx;
+    int voltage = 0;
 
     void setup() {
         pinMode(RX_PIN, INPUT);
@@ -39,6 +40,7 @@
         display.clearDisplay();
         Serial.begin(9600);
         radio.stopListening();
+        Serial.begin(9600);
 
         while(!radio.write(modeNumber, sizeof(modeNumber))) {
             display.clearDisplay();
@@ -57,7 +59,7 @@
         display.print("connected!");
         display.display();
         delay(2000);
-        radio.setAutoAck(false);
+        dispHome();
     }
 
     void loop() {
@@ -65,7 +67,7 @@
         lx = analogRead(LX_PIN);
         checkMode();
         sendData();
-        dispHome();
+        Serial.println(rx);
     }
 
     void dispHome() {
@@ -75,7 +77,7 @@
         display.println(modeName[modeNumber]);
         display.setCursor(0, 8);
         display.print("voltage: ");
-        display.println(getVoltage());
+        display.println(voltage);
         display.display();
     }
 
@@ -85,9 +87,11 @@
         if(sw0 == LOW && modeNumber == 2) {
             modeNumber = 0;
             EEPROM.write(0x000, modeNumber);
+            dispHome();
         }else if(sw0 == LOW) {
             modeNumber ++;
             EEPROM.write(0x000, modeNumber);
+            dispHome();
         }
     }
 
@@ -99,8 +103,8 @@
         radio.write(lx, sizeof(lx));
     }
 
-    int getVoltage() {
-        return 0;
+    void getVoltage() {
+        dispHome();
     }
 
 
