@@ -19,8 +19,6 @@
     String modeName[] = {"manual", "auto", "semi-auto"};
     int rx, lx;
     int voltage;
-    bool connection = false;
-    const int connectionKey = 119;
 
     void setup() {
         pinMode(RX_PIN, INPUT);
@@ -40,33 +38,20 @@
         display.setTextColor(WHITE);
         display.clearDisplay();
         Serial.begin(9600);
+        radio.stopListening();
 
-        while(!connection) {
-            int read = 0;
-            display.setCursor(0,0);
+        while(!radio.write(modeNumber, sizeof(modeNumber))) {
+            display.clearDisplay();
+            display.setCursor(0, 0);
             display.print("waiting connection");
             display.display();
-            radio.startListening();
-            delay(100);
-            for(int i = 0; i < 4; i++) {
-                if(radio.available()) {
-                    Serial.println("nano:recv");
-                    radio.read(read, sizeof(read));
-                    if(read == connectionKey) {
-                        connection = true;
-                    }
-                }
-                if(i == 0) {
-                    continue;
-                }else {
-                    display.print(".");
-                    display.display();
-                }
-                delay(100);
+            delay(200);
+            for(int i = 0; i < 3; i++) {
+                display.print(".");
+                display.display();
+                delay(200);
             }
-            display.clearDisplay();
         }
-        
     }
 
     void dispHome() {
