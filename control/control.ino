@@ -52,6 +52,7 @@
                 delay(200);
             }
         }
+        radio.setAutoAck(false);
     }
 
     void dispHome() {
