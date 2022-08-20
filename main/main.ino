@@ -20,7 +20,9 @@ void setup() {
 }
 
 void loop() {
-    if(radio.available()) {
-        Serial.println("recv");
-    }
+    
+}
+//すべての通信処理
+void communication() {
+
 }

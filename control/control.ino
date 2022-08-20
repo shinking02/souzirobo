@@ -45,19 +45,22 @@ void setup() {
 
     Serial.begin(9600);
 
-    while(!radio.write(&data, sizeof(data))) {
-        display.clearDisplay();
-        display.setCursor(0, 0);
-        display.print("waiting connection");
-        display.display();
-        delay(200);
-        for(int i = 0; i < 3; i ++) {
-            display.print(".");
-            display.display();
-            delay(200);
-        }
+//起動時接続待ち処理
+    while(1) {
     }
 }
 void loop() {
 
+}
+//すべての通信処理
+void communication() {
+
+}
+//スイッチ監視
+void checkSwitch() {
+
+}
+//oled描画
+void dispHome() {
+    
 }
