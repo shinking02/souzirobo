@@ -18,3 +18,9 @@ void setup() {
     radio.startListening();
     Serial.begin(9600);
 }
+
+void loop() {
+    if(radio.available()) {
+        Serial.println("recv");
+    }
+}
