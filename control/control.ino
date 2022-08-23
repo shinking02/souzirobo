@@ -20,7 +20,7 @@ int modeNumber;
 String modeName[] = {"manual", "auto", "semi-auto"};
 int rx, lx;
 int voltage = 0;
-int data[3] = {0};
+int data[3] = {0, 512, 512};
 
 void setup() {
     pinMode(RX_PIN, INPUT);
@@ -29,6 +29,7 @@ void setup() {
     pinMode(SW1_PIN, INPUT);
     pinMode(SW2_PIN, INPUT);
     modeNumber = EEPROM.read(0x000);
+    data[0] = modeNumber;
     radio.begin();
     radio.openWritingPipe(address[1]);
     radio.openReadingPipe(1, address[0]);
