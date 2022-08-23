@@ -14,6 +14,7 @@ const int R_FRONT = 10;
 int modeNumber;
 int data[3];
 float voltage = 1;
+int r_stick, l_stick;
 
 void setup() {
     radio.begin();
@@ -29,13 +30,13 @@ void loop() {
     voltage = analogRead(A5) / 51.4;
     switch(modeNumber) {
         case 0:
-
+            manual();
             break;
         case 1:
-
+            automatic();
             break;
         case 2:
-
+            semi_auto();
             break;
         default:
             break;
@@ -52,4 +53,33 @@ void communication() {
     if(radio.available()) {
         radio.read(&data, sizeof(data));
     }
+}
+
+void manual() {
+    r_stick = map(data[1], 0, 1023, -255, 255);
+    l_stick = map(data[2], 0, 1023, -255, 255);
+    analogWrite(L_BACK, 0);
+    analogWrite(L_FRONT, 0);
+    analogWrite(R_BACK, 0);
+    analogWrite(R_FRONT, 0);
+    
+    if(r_stick >= 10) {
+        analogWrite(R_FRONT, r_stick);
+    }else if(r_stick < 10) {
+        analogWrite(R_BACK, abs(r_stick));
+    }
+
+    if(l_stick >= 10) {
+        analogWrite(L_FRONT, l_stick);
+    }else if(l_stick < 10) {
+        analogWrite(L_BACK, abs(l_stick));
+    }
+}
+
+void automatic() {
+
+}
+
+void semi_auto() {
+
 }

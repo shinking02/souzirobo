@@ -42,7 +42,6 @@ void setup() {
     display.setTextColor(WHITE);
     display.clearDisplay();
     radio.stopListening();
-    Serial.begin(9600);
 
 //起動時接続待ち処理
     while(!radio.write(&data, sizeof(data))) {
