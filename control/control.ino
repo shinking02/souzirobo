@@ -80,9 +80,7 @@ void loop() {
 void communication() {
     delay(10);
     radio.stopListening();
-    if(!radio.write(&data, sizeof(data))) {
-        Serial.println("sendError");
-    }
+    radio.write(&data, sizeof(data));
     delay(10);
     radio.startListening();
     if(radio.available()) {
