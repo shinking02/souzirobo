@@ -17,7 +17,7 @@ const int SW0_PIN = 2; //モードセレクト
 const int SW1_PIN = 3;
 const int SW2_PIN = 4;
 int modeNumber;
-String modeName[] = {"manual", "auto", "semi-auto"};
+String modeName[] = {"manual", "automatic", "semi_auto"};
 int rx, lx;
 float voltage = 0;
 int data[3] = {0, 512, 512};
