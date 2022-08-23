@@ -22,7 +22,7 @@ int rx, lx;
 int roboStatus[2] = {0};
 float voltage = 0;
 int controlData[3] = {0, 512, 512};
-int statusFlag = 0;
+int statusFlag = 0, beforeStatusFlag = 0;
 
 void setup() {
     pinMode(RX_PIN, INPUT);
@@ -109,10 +109,12 @@ void checkUpdate() {
         dispHome();
     }
 
-    if(statusFlag != 0){
+    if(statusFlag != 0 && beforeStatusFlag == 0){
         dispHome();
-    } 
-    
+        beforeStatusFlag = statusFlag;
+    }else if(statusFlag == 0) {
+        beforeStatusFlag = 0;
+    }
 }
 
 //oled描画
@@ -127,21 +129,27 @@ void dispHome() {
     display.print(voltage);
     display.print("v");
     display.setCursor(0, 24);
-    switch(statusFlag) {
-        case 1:
-            display.print("CENTER!");
-            break;
-        case 2:
-            display.print("RIGHT!");
-            break;
-        case 3:
-            display.print("LEFT!");
-            break;
-        case 4:
-            display.print("TURN");
-            break;
-        default:
-            break;
-    }
+    display.print(getStatusMessage(statusFlag));
     display.display();
+}
+
+String getStatusMessage(int flag) {
+    String status = "";
+    switch(flag) {
+    case 1:
+        status = "CENTER";
+        break;
+    case 2:
+        status = "R";
+        break;
+    case 3:
+        status = "L";
+        break;
+    case 4:
+        status = "TURN";
+        break;
+    default:
+        break;
+    }
+    return status;
 }
