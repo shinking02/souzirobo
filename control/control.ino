@@ -145,9 +145,6 @@ String getStatusMessage(int flag) {
     case 3:
         status = "L";
         break;
-    case 4:
-        status = "TURN";
-        break;
     default:
         break;
     }

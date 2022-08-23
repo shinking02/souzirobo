@@ -26,10 +26,12 @@ void setup() {
     radio.openReadingPipe(1, address[1]);
     radio.setPALevel(RF24_PA_MAX);
     radio.startListening();
+    Serial.begin(9600);
 }
 
 void loop() {
     communication();
+    modeNumber = controlData[0];
     roboStatus[1] = analogRead(VOLTAGE_PIN); //volage
     switch(modeNumber) {
         case 0:
@@ -89,6 +91,7 @@ void automatic() {
     analogWrite(L_BACK, 0);
     analogWrite(R_FRONT, 250);
     analogWrite(L_FRONT, 250);
+    Serial.println(r_sensor);
     
 
     if(r_sensor > 300) {
@@ -102,7 +105,7 @@ void automatic() {
         analogWrite(R_FRONT, 40);
     }
     if(center_sensor > 350) {
-        roboStatus[0] = 4;
+        roboStatus[0] = 1;
         communication();
         escape(r_sensor, l_sensor);
     }
