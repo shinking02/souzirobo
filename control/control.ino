@@ -63,7 +63,7 @@ void setup() {
     display.display();
     delay(2000);
     dispHome();
-    MsTimer2::set(12000, dispHome);
+    MsTimer2::set(2000, dispHome);
     MsTimer2::start();
 }
 
