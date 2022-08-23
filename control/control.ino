@@ -66,6 +66,7 @@ void setup() {
     dispHome();
     MsTimer2::set(2000, dispHome);
     MsTimer2::start();
+    Serial.begin(9600);
 }
 
 void loop() {
@@ -78,6 +79,8 @@ void loop() {
     statusFlag = roboStatus[0];
     communication();
     checkUpdate();
+    Serial.print(roboStatus[0]);
+    Serial.println(roboStatus[1]);
 }
 
 //すべての通信処理
@@ -106,7 +109,7 @@ void checkUpdate() {
         dispHome();
     }
 
-    if(statusFlag != 1){
+    if(statusFlag != 0){
         dispHome();
     } 
     
@@ -126,7 +129,7 @@ void dispHome() {
     display.setCursor(0, 24);
     switch(statusFlag) {
         case 1:
-            display.print("TURN");
+            display.print("CENTER!");
             break;
         case 2:
             display.print("RIGHT!");
@@ -135,7 +138,7 @@ void dispHome() {
             display.print("LEFT!");
             break;
         case 4:
-            display.print("CENTER!");
+            display.print("TURN");
             break;
         default:
             break;
