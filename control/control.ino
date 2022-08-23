@@ -19,7 +19,7 @@ const int SW2_PIN = 4;
 int modeNumber;
 String modeName[] = {"manual", "auto", "semi-auto"};
 int rx, lx;
-int voltage = 0;
+float voltage = 0;
 int data[3] = {0, 512, 512};
 
 void setup() {

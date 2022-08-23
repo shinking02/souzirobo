@@ -8,7 +8,7 @@ RF24 radio(7, 8);
 const byte address[][6] = {"00119", "00102"};
 int modeNumber;
 int data[3];
-int voltage = 1;
+float voltage = 1;
 
 void setup() {
     radio.begin();
