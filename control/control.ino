@@ -22,6 +22,7 @@ int rx, lx;
 int roboStatus[2] = {0};
 float voltage = 0;
 int controlData[3] = {0, 512, 512};
+int statusFlag = 0;
 
 void setup() {
     pinMode(RX_PIN, INPUT);
@@ -74,8 +75,9 @@ void loop() {
     controlData[1] = rx;
     controlData[2] = lx;
     voltage = roboStatus[1] / 51.4;
+    statusFlag = roboStatus[0];
     communication();
-    checkSwitch();
+    checkUpdate();
 }
 
 //すべての通信処理
@@ -91,18 +93,23 @@ void communication() {
 }
 
 //スイッチ監視
-void checkSwitch() {
+void checkUpdate() {
     int sw0;
     sw0 = digitalRead(SW0_PIN);
-        if(sw0 == LOW && modeNumber == 2) {
-            modeNumber = 0;
-            EEPROM.write(0x000, modeNumber);
-            dispHome();
-        }else if(sw0 == LOW) {
-            modeNumber ++;
-            EEPROM.write(0x000, modeNumber);
-            dispHome();
-        }
+    if(sw0 == LOW && modeNumber == 2) {
+        modeNumber = 0;
+        EEPROM.write(0x000, modeNumber);
+        dispHome();
+    }else if(sw0 == LOW) {
+        modeNumber ++;
+        EEPROM.write(0x000, modeNumber);
+        dispHome();
+    }
+
+    if(statusFlag != 1){
+        dispHome();
+    } 
+    
 }
 
 //oled描画
@@ -116,5 +123,22 @@ void dispHome() {
     display.print("voltage: ");
     display.print(voltage);
     display.print("v");
+    display.setCursor(0, 24);
+    switch(statusFlag) {
+        case 1:
+            display.print("TURN");
+            break;
+        case 2:
+            display.print("RIGHT!");
+            break;
+        case 3:
+            display.print("LEFT!");
+            break;
+        case 4:
+            display.print("CENTER!");
+            break;
+        default:
+            break;
+    }
     display.display();
 }
