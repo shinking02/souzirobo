@@ -116,5 +116,6 @@ void dispHome() {
     display.setCursor(0, 8);
     display.print("voltage: ");
     display.print(voltage);
+    display.print("v");
     display.display();
 }
