@@ -8,7 +8,7 @@ RF24 radio(7, 8);
 const byte address[][6] = {"00119", "00102"};
 int modeNumber;
 int data[3];
-int r = 1;
+int voltage = 1;
 
 void setup() {
     radio.begin();
@@ -24,5 +24,12 @@ void loop() {
 }
 //すべての通信処理
 void communication() {
-
+    delay(10);
+    radio.stopListening();
+    radio.write(&voltage, sizeof(voltage));
+    delay(10);
+    radio.startListening();
+    if(radio.available()) {
+        radio.read(&data, sizeof(data));
+    }
 }
