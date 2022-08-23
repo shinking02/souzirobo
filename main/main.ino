@@ -22,6 +22,7 @@ void setup() {
 void loop() {
     communication();
 }
+
 //すべての通信処理
 void communication() {
     delay(10);
