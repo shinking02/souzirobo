@@ -7,6 +7,9 @@
 RF24 radio(7, 8);
 const byte address[][6] = {"00119", "00102"};
 const int VOLTAGE_PIN = A5;
+const int R_SENSOR_PIN = A0;
+const int L_SENSOR_PIN = A1;
+const int CENTER_SENSOR_PIN = A2;
 const int L_BACK = 5;
 const int L_FRONT = 6;
 const int R_BACK = 9;
@@ -15,6 +18,7 @@ int modeNumber;
 int data[3];
 float voltage = 1;
 int r_stick, l_stick;
+
 
 void setup() {
     radio.begin();
@@ -77,9 +81,42 @@ void manual() {
 }
 
 void automatic() {
+    int r_sensor = analogRead(R_SENSOR_PIN);
+    int l_sensor = analogRead(L_SENSOR_PIN);
+    int center_sensor = analogRead(CENTER_SENSOR_PIN);
+    analogWrite(R_BACK, 0);
+    analogWrite(L_BACK, 0);
+    analogWrite(R_FRONT, 250);
+    analogWrite(L_FRONT, 250);
+    
 
+    if(r_sensor > 300) {
+        analogWrite(L_FRONT, 40);
+    }
+    if(l_sensor > 300) {
+        analogWrite(R_FRONT, 40);
+    }
+    if(center_sensor > 350) {
+        escape(r_sensor, l_sensor);
+    }
+}
+
+void escape(int r, int l) {
+    if(r > l) {
+        analogWrite(R_BACK, 0);
+        analogWrite(L_BACK, 100);
+        analogWrite(R_FRONT, 100);
+        analogWrite(L_FRONT, 0);
+    }else {
+        analogWrite(R_BACK, 100);
+        analogWrite(L_BACK, 0);
+        analogWrite(R_FRONT, 0);
+        analogWrite(L_FRONT, 100);
+    }
+    delay(1800);
 }
 
 void semi_auto() {
 
 }
+
