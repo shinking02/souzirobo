@@ -33,7 +33,7 @@ void setup() {
     radio.begin();
     radio.openWritingPipe(address[1]);
     radio.openReadingPipe(1, address[0]);
-    radio.setPALevel(RF24_PA_MIN);
+    radio.setPALevel(RF24_PA_MAX);
     radio.setAutoAck(true);
     display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
     display.display();
