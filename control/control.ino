@@ -137,10 +137,10 @@ String getStatusMessage(int flag) {
     String status = "";
     switch(flag) {
     case 1:
-        status = "CENTER";
+        status = "       CENTER";
         break;
     case 2:
-        status = "R";
+        status = "                    R";
         break;
     case 3:
         status = "L";
