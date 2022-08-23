@@ -21,7 +21,6 @@ String modeName[] = {"manual", "auto", "semi-auto"};
 int rx, lx;
 int voltage = 0;
 int data[3] = {0};
-int errorFlag = 0;
 
 void setup() {
     pinMode(RX_PIN, INPUT);
@@ -42,25 +41,79 @@ void setup() {
     display.setTextColor(WHITE);
     display.clearDisplay();
     radio.stopListening();
-
     Serial.begin(9600);
 
 //起動時接続待ち処理
-    while(1) {
+    while(!radio.write(&data, sizeof(data))) {
+        display.clearDisplay();
+        display.setCursor(0, 0);
+        display.print("waiting connection");
+        display.display();
+        delay(200);
+        for(int i = 0; i < 3; i++) {
+            display.print(".");
+            display.display();
+            delay(200);
+        }
     }
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("connected!");
+    display.display();
+    delay(2000);
+    dispHome();
+    MsTimer2::set(12000, dispHome);
+    MsTimer2::start();
 }
-void loop() {
 
+void loop() {
+    rx = analogRead(RX_PIN);
+    lx = analogRead(LX_PIN);
+    data[0] = modeNumber;
+    data[1] = rx;
+    data[2] = lx;
+    communication();
+    checkSwitch();
 }
+
 //すべての通信処理
 void communication() {
-
+    delay(10);
+    radio.stopListening();
+    if(!radio.write(&data, sizeof(data))) {
+        Serial.println("sendError");
+    }
+    delay(10);
+    radio.startListening();
+    if(radio.available()) {
+        radio.read(&voltage, sizeof(voltage));
+    }
 }
+
 //スイッチ監視
 void checkSwitch() {
-
+    int sw0;
+    sw0 = digitalRead(SW0_PIN);
+        if(sw0 == LOW && modeNumber == 2) {
+            modeNumber = 0;
+            EEPROM.write(0x000, modeNumber);
+            dispHome();
+        }else if(sw0 == LOW) {
+            modeNumber ++;
+            EEPROM.write(0x000, modeNumber);
+            dispHome();
+        }
 }
+
 //oled描画
 void dispHome() {
-    
+    interrupts();
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("mode: ");
+    display.print(modeName[modeNumber]);
+    display.setCursor(0, 8);
+    display.print("voltage: ");
+    display.print(voltage);
+    display.display();
 }
