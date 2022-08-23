@@ -15,8 +15,8 @@ const int L_FRONT = 6;
 const int R_BACK = 9;
 const int R_FRONT = 10;
 int modeNumber;
-int data[3];
-float voltage = 1;
+int controlData[3];
+int roboStatus[2] = {0};
 int r_stick, l_stick;
 
 
@@ -31,7 +31,7 @@ void setup() {
 
 void loop() {
     communication();
-    voltage = analogRead(A5) / 51.4;
+    roboStatus[1] = analogRead(A5) / 51.4;
     switch(modeNumber) {
         case 0:
             manual();
@@ -51,17 +51,18 @@ void loop() {
 void communication() {
     delay(10);
     radio.stopListening();
-    radio.write(&voltage, sizeof(voltage));
+    radio.write(&roboStatus, sizeof(roboStatus));
     delay(10);
+
     radio.startListening();
     if(radio.available()) {
-        radio.read(&data, sizeof(data));
+        radio.read(&controlData, sizeof(controlData));
     }
 }
 
 void manual() {
-    r_stick = map(data[1], 0, 1023, -255, 255);
-    l_stick = map(data[2], 0, 1023, -255, 255);
+    r_stick = map(controlData[1], 0, 1023, -255, 255);
+    l_stick = map(controlData[2], 0, 1023, -255, 255);
     analogWrite(L_BACK, 0);
     analogWrite(L_FRONT, 0);
     analogWrite(R_BACK, 0);

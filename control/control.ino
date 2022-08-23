@@ -19,8 +19,9 @@ const int SW2_PIN = 4;
 int modeNumber;
 String modeName[] = {"manual", "automatic", "semi_auto"};
 int rx, lx;
+int roboStatus[2] = {0};
 float voltage = 0;
-int data[3] = {0, 512, 512};
+int controlData[3] = {0, 512, 512};
 
 void setup() {
     pinMode(RX_PIN, INPUT);
@@ -29,7 +30,7 @@ void setup() {
     pinMode(SW1_PIN, INPUT);
     pinMode(SW2_PIN, INPUT);
     modeNumber = EEPROM.read(0x000);
-    data[0] = modeNumber;
+    controlData[0] = modeNumber;
     radio.begin();
     radio.openWritingPipe(address[1]);
     radio.openReadingPipe(1, address[0]);
@@ -44,7 +45,7 @@ void setup() {
     radio.stopListening();
 
 //起動時接続待ち処理
-    while(!radio.write(&data, sizeof(data))) {
+    while(!radio.write(&controlData, sizeof(controlData))) {
         display.clearDisplay();
         display.setCursor(0, 0);
         display.print("waiting connection");
@@ -69,9 +70,10 @@ void setup() {
 void loop() {
     rx = analogRead(RX_PIN);
     lx = analogRead(LX_PIN);
-    data[0] = modeNumber;
-    data[1] = rx;
-    data[2] = lx;
+    controlData[0] = modeNumber;
+    controlData[1] = rx;
+    controlData[2] = lx;
+    voltage = roboStatus[1] / 51.4;
     communication();
     checkSwitch();
 }
@@ -80,11 +82,11 @@ void loop() {
 void communication() {
     delay(10);
     radio.stopListening();
-    radio.write(&data, sizeof(data));
+    radio.write(&controlData, sizeof(controlData));
     delay(10);
     radio.startListening();
     if(radio.available()) {
-        radio.read(&voltage, sizeof(voltage));
+        radio.read(&roboStatus, sizeof(roboStatus));
     }
 }
 
