@@ -136,17 +136,17 @@ void dispHome() {
 String getStatusMessage(int flag) {
     String status = "";
     switch(flag) {
-    case 1:
-        status = "       CENTER";
-        break;
-    case 2:
-        status = "                    R";
-        break;
-    case 3:
-        status = "L";
-        break;
-    default:
-        break;
+        case 1:
+            status = "       CENTER";
+            break;
+        case 2:
+            status = "                    R";
+            break;
+        case 3:
+            status = "L";
+            break;
+        default:
+            break;
     }
     return status;
 }
