@@ -10,6 +10,7 @@ const int VOLTAGE_PIN = A5;
 const int R_SENSOR_PIN = A0;
 const int L_SENSOR_PIN = A2;
 const int CENTER_SENSOR_PIN = A1;
+const int CENTER_SWITCH_PIN = 0;
 const int L_BACK = 5;
 const int L_FRONT = 6;
 const int R_BACK = 9;
@@ -87,6 +88,7 @@ void automatic() {
     int r_sensor = analogRead(R_SENSOR_PIN);
     int l_sensor = analogRead(L_SENSOR_PIN);
     int center_sensor = analogRead(CENTER_SENSOR_PIN);
+    int center_switch = digitalRead(CENTER_SWITCH_PIN);
     analogWrite(R_BACK, 0);
     analogWrite(L_BACK, 0);
     analogWrite(R_FRONT, 250);
@@ -98,13 +100,15 @@ void automatic() {
         roboStatus[0] = 2;
         communication();
         analogWrite(L_FRONT, 40);
+        delay(100);
     }
     if(l_sensor > 300) {
         roboStatus[0] = 3;
         communication();
         analogWrite(R_FRONT, 40);
+        delay(100);
     }
-    if(center_sensor > 350) {
+    if(center_sensor > 350 || center_switch == HIGH) {
         roboStatus[0] = 1;
         communication();
         escape(r_sensor, l_sensor);
