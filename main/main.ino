@@ -22,6 +22,11 @@ int r_stick, l_stick;
 
 
 void setup() {
+    pinMode(VOLTAGE_PIN, INPUT);
+    pinMode(R_SENSOR_PIN, INPUT);
+    pinMode(L_SENSOR_PIN, INPUT);
+    pinMode(CENTER_SENSOR_PIN, INPUT);
+    pinMode(CENTER_SWITCH_PIN, INPUT);
     radio.begin();
     radio.openWritingPipe(address[0]);
     radio.openReadingPipe(1, address[1]);
