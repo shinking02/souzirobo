@@ -113,7 +113,7 @@ void automatic() {
         analogWrite(R_FRONT, 40);
         delay(100);
     }
-    if(center_sensor > 350 || center_switch == HIGH) {
+    if(center_sensor > 350 || center_switch == LOW) {
         roboStatus[0] = 1;
         communication();
         escape(r_sensor, l_sensor);
